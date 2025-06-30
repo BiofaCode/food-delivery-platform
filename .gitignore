@@ -1,2 +1,8 @@
+# Ce fichier dit à Git quoi ignorer
 venv/
-venv/
+__pycache__/
+*.pyc
+*.log
+.env
+node_modules/
+dist/
