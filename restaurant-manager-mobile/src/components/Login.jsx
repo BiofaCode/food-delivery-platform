@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Store, User, Lock } from 'lucide-react';
+import { Store, User, Lock } from 'lucide-react'; // <-- MODIFICATION ICI
 import axios from 'axios';
 
 const Login = ({ onLogin }) => {
@@ -27,7 +27,7 @@ const Login = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/login', formData);
+      const response = await axios.post('http://localhost:5000/login', formData );
       
       if (response.data.role === 'restaurateur') {
         // Récupérer les informations du restaurant
@@ -81,7 +81,7 @@ const Login = ({ onLogin }) => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-            <Store className="h-8 w-8 text-orange-600" />
+            <Store className="h-8 w-8 text-orange-600" /> {/* <-- MODIFICATION ICI */}
           </div>
           <CardTitle className="text-2xl font-bold">Restaurant Manager</CardTitle>
           <p className="text-gray-600">Connectez-vous pour gérer votre restaurant</p>
@@ -155,4 +155,3 @@ const Login = ({ onLogin }) => {
 };
 
 export default Login;
-

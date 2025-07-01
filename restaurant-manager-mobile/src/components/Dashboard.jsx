@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Store, 
+  Store, // <-- MODIFICATION ICI
   UtensilsCrossed, 
   Clock, 
   DollarSign, 
@@ -56,7 +56,7 @@ const Dashboard = ({ restaurant, onNavigate }) => {
     {
       title: 'Profil restaurant',
       description: 'Modifier les informations du restaurant',
-      icon: <Store className="h-6 w-6" />,
+      icon: <Store className="h-6 w-6" />, // <-- MODIFICATION ICI
       action: () => onNavigate('profile'),
       color: 'bg-purple-500'
     }
@@ -196,4 +196,3 @@ const Dashboard = ({ restaurant, onNavigate }) => {
 };
 
 export default Dashboard;
-
