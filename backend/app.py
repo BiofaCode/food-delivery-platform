@@ -14,11 +14,24 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app) # Enable CORS for all origins
 
-# --- LIGNE DE DÉBOGAGE À AJOUTER ICI ---
-print(f"DEBUG: DATABASE_URL = {os.getenv('DATABASE_URL')}")
-# ---------------------------------------
+# --- Nouvelle configuration de la base de données ---
+database_url = os.getenv("DATABASE_URL")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+if not database_url:
+    print("ERROR: DATABASE_URL environment variable is not set!")
+    # Fallback pour le développement local si .env n'est pas chargé
+    # Ou une erreur explicite pour le déploiement
+    # Pour l'instant, nous allons juste imprimer l'erreur et laisser Render échouer
+    # pour que vous voyiez le message dans les logs.
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///temp.db" # Valeur par défaut pour éviter le crash immédiat
+else:
+    print(f"DEBUG: Using DATABASE_URL = {database_url}")
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# ---------------------------------------------------
+
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
