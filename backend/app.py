@@ -4,14 +4,21 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
 import os
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_cors import CORS
+import stripe
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) # Enable CORS for all origins
 
-# Configuration de la base de données
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", "postgresql://user:password@localhost/food_delivery_db"
-)
+# --- LIGNE DE DÉBOGAGE À AJOUTER ICI ---
+print(f"DEBUG: DATABASE_URL = {os.getenv('DATABASE_URL')}")
+# ---------------------------------------
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
