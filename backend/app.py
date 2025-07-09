@@ -19,14 +19,16 @@ database_url = os.getenv("DATABASE_URL")
 
 if not database_url:
     print("ERROR: DATABASE_URL environment variable is not set!")
-    # Fallback pour le développement local si .env n'est pas chargé
-    # Ou une erreur explicite pour le déploiement
-    # Pour l'instant, nous allons juste imprimer l'erreur et laisser Render échouer
-    # pour que vous voyiez le message dans les logs.
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///temp.db" # Valeur par défaut pour éviter le crash immédiat
+    # En production, il est crucial que cette variable soit définie.
+    # Nous allons forcer une erreur pour que le déploiement échoue si elle est manquante.
+    # Cela garantit que l'application ne démarre pas sans connexion DB.
+    raise ValueError("DATABASE_URL environment variable is not set. Cannot connect to database.")
 else:
+    # Assurez-vous que l'URL est bien formatée pour SQLAlchemy avec psycopg2
+    if not database_url.startswith("postgresql+psycopg2://"):
+        database_url = database_url.replace("postgresql://", "postgresql+psycopg2://")
     print(f"DEBUG: Using DATABASE_URL = {database_url}")
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url.replace("postgresql://", "postgresql+psycopg2://")
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # ---------------------------------------------------
