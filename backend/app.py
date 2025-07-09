@@ -14,30 +14,28 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 CORS(app) # Enable CORS for all origins
 
-# --- Nouvelle configuration de la base de données ---
-database_url = os.getenv("DATABASE_URL")
+# --- Nouvelle configuration de la base de données par composants ---
+# Récupérez ces valeurs depuis la section "Connections" de votre DB sur Render.com
+DB_HOSTNAME = os.getenv("DB_HOSTNAME", "dpg-d1hq833e5dus739af47g-a") # Remplacez YOUR_HOSTNAME
+DB_PORT = os.getenv("DB_PORT", "5432") # Remplacez YOUR_PORT (généralement 5432)
+DB_NAME = os.getenv("DB_NAME", "food_delivery_db_wnh8") # Remplacez YOUR_DATABASE_NAME
+DB_USER = os.getenv("DB_USER", "food_delivery_db_wnh8_user") # Remplacez YOUR_USERNAME
+DB_PASSWORD = os.getenv("DB_PASSWORD", "2bN1TAPFwm1t6PRKpPnYvwX0lNIbw1OW") # Remplacez YOUR_PASSWORD
 
-if not database_url:
-    print("ERROR: DATABASE_URL environment variable is not set!")
-    # En production, il est crucial que cette variable soit définie.
-    # Nous allons forcer une erreur pour que le déploiement échoue si elle est manquante.
-    # Cela garantit que l'application ne démarre pas sans connexion DB.
-    raise ValueError("DATABASE_URL environment variable is not set. Cannot connect to database.")
-else:
-    # Assurez-vous que l'URL est bien formatée pour SQLAlchemy avec psycopg2
-    if not database_url.startswith("postgresql+psycopg2://"):
-        database_url = database_url.replace("postgresql://", "postgresql+psycopg2://")
-    print(f"DEBUG: Using DATABASE_URL = {database_url}")
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+# Construire l'URL de la base de données à partir des composants
+# Nous utilisons postgresql+psycopg2 pour spécifier explicitement le driver
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOSTNAME}:{DB_PORT}/{DB_NAME}"
+)
 
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# ---------------------------------------------------
-
+print(f"DEBUG: Constructed DB URL = {app.config["SQLALCHEMY_DATABASE_URI"]}")
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# ------------------------------------------------------------------
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
 
 # Modèles de la base de données
 class User(db.Model):
