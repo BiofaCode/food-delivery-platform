@@ -26,7 +26,7 @@ if not database_url:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///temp.db" # Valeur par défaut pour éviter le crash immédiat
 else:
     print(f"DEBUG: Using DATABASE_URL = {database_url}")
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url.replace("postgresql://", "postgresql+psycopg2://")
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # ---------------------------------------------------
